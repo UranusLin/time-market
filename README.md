@@ -1,6 +1,6 @@
 # time-market
 
-This template should help get you started developing with Vue 3 in Vite.
+This project is for showing time base market, it's base on web3 project.
 
 ## Recommended IDE Setup
 

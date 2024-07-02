@@ -1,9 +1,19 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const name = ref('')
 const select = ref('')
 const checked = ref(false)
+const number = ref(0)
+const doubleNumber = computed(() => number.value * 2)
+const numberAdd = () => {
+  number.value++
+}
+const text = ref('')
+const message = ref('')
+watch(text, (newValue, oldValue) => {
+  message.value = `${oldValue} input change to: ${newValue}`
+})
 </script>
 
 <template>
@@ -31,6 +41,19 @@ const checked = ref(false)
     <div>
       <input type="checkbox" v-model="checked" />
       <p>checkbox status: {{ checked }}</p>
+    </div>
+    <span>computed demo</span>
+    <div>
+      <p>原始數字: {{ number }}</p>
+      <p>兩倍數字: {{ doubleNumber }}</p>
+      <button @click="numberAdd()" class="bg-blue-400 rounded-md p-1 text-white mb-2">
+        增加數字
+      </button>
+    </div>
+    <span>watch demo</span>
+    <div>
+      <input v-model="text" placeholder="input something" class="p-1 rounded-md" />
+      <p>{{ message }}</p>
     </div>
   </div>
 </template>

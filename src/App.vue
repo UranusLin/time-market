@@ -1,56 +1,36 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+
+const name = ref('')
+const select = ref('')
+const checked = ref(false)
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-100">
-    <header class="bg-white shadow">
-      <div class="container mx-auto py-6 px-4">
-        <h1 class="text-3xl font-bold">通訊錄管理頁面</h1>
-      </div>
-    </header>
-    <main class="container mx-auto flex-1 p-4">
-      <form id="contactForm" class="mb-4">
-        <div class="mb-4">
-          <label for="name" class="block text-gray-700">姓名:</label>
-          <input
-            type="text"
-            id="name"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="輸入姓名"
-          />
-        </div>
-        <div class="mb-4">
-          <label for="phone" class="block text-gray-700">電話:</label>
-          <input
-            type="text"
-            id="phone"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="輸入電話"
-          />
-        </div>
-        <button
-          type="submit"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          新增聯絡人
-        </button>
-      </form>
-
+  <div class="flex items-center justify-center flex-col bg-gray-100">
+    <div v-if="checked">
       <input
+        v-model="name"
         type="text"
-        id="search"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-        placeholder="搜尋聯絡人"
+        id="name"
+        class="shadow appearance-none border rounded w-300 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        placeholder="輸入姓名"
       />
-
-      <ul id="contactList" class="list-none p-0">
-        <!-- show contacts -->
-      </ul>
-    </main>
-    <footer class="bg-gray-200 py-4 text-center">
-      <p class="text-gray-600">&copy; 2023 Your Company</p>
-    </footer>
+      <p>你輸入的是: {{ name }}</p>
+    </div>
+    <div v-else>
+      <select v-model="select">
+        <option disabled value="">choose one</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+      </select>
+      <p>你選擇的是: {{ select }}</p>
+    </div>
+    <div>
+      <input type="checkbox" v-model="checked" />
+      <p>checkbox status: {{ checked }}</p>
+    </div>
   </div>
 </template>

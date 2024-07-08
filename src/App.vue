@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import ChildCompontent from '@/components/ChildComponent.vue'
+import Counter from '@/components/Counter.vue'
 
 const name = ref('')
 const select = ref('')
@@ -14,6 +16,10 @@ const message = ref('')
 watch(text, (newValue, oldValue) => {
   message.value = `${oldValue} input change to: ${newValue}`
 })
+const count = ref(0)
+const updateCount = (newCount) => {
+  count.value = newCount
+}
 </script>
 
 <template>
@@ -55,5 +61,8 @@ watch(text, (newValue, oldValue) => {
       <input v-model="text" placeholder="input something" class="p-1 rounded-md" />
       <p>{{ message }}</p>
     </div>
+    <ChildCompontent :message="text" />
+    <Counter @update-count="updateCount" />
+    <p>Parent count: {{ count }}</p>
   </div>
 </template>

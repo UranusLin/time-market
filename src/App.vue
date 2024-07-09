@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import ChildCompontent from '@/components/ChildComponent.vue'
 import Counter from '@/components/Counter.vue'
 import Contact from '@/components/Contact.vue'
+import CharacterList from '@/views/CharacterList.vue'
 
 const name = ref('')
 const select = ref('')
@@ -90,5 +91,6 @@ const contacts_list = [
     <div v-for="conact of contacts_list" :key="conact.id" class="mt-4">
       <Contact :contact="conact" />
     </div>
+    <CharacterList />
   </div>
 </template>

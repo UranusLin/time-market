@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import ChildCompontent from '@/components/ChildComponent.vue'
 import Counter from '@/components/Counter.vue'
+import Contact from '@/components/Contact.vue'
 
 const name = ref('')
 const select = ref('')
@@ -20,6 +21,18 @@ const count = ref(0)
 const updateCount = (newCount) => {
   count.value = newCount
 }
+const contacts_list = [
+  {
+    id: 1,
+    name: 'Morris',
+    phone: '0912123123'
+  },
+  {
+    id: 2,
+    name: 'KK',
+    phone: '09111111'
+  }
+]
 </script>
 
 <template>
@@ -64,5 +77,18 @@ const updateCount = (newCount) => {
     <ChildCompontent :message="text" />
     <Counter @update-count="updateCount" />
     <p>Parent count: {{ count }}</p>
+    <div v-for="conact of contacts_list" :key="conact.id">
+      <p>id: {{ conact.id }}</p>
+      <p>name: {{ conact.name }}</p>
+      <p>phone: {{ conact.phone }}</p>
+    </div>
+    <li v-for="(value, key) in contacts_list" :key="key">
+      <ul>
+        <p>{{ key }}, {{ value }}</p>
+      </ul>
+    </li>
+    <div v-for="conact of contacts_list" :key="conact.id" class="mt-4">
+      <Contact :contact="conact" />
+    </div>
   </div>
 </template>

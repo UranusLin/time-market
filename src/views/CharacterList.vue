@@ -2,12 +2,14 @@
 import { ref } from 'vue'
 import CharacterCard from '@/components/CharacterCard.vue'
 import CharacterModal from '@/components/CharacterModal.vue'
+import Header from '@/components/Header.vue'
 
 const characters = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
 const showModal = ref(false)
 const selectedCharacter = ref(null)
+const title = 'Rick & Morty Characters'
 
 // 新增過濾條件
 const searchName = ref('')
@@ -80,8 +82,7 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
 
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-4 text-center">Rick & Morty Characters</h1>
-
+    <Header :title="title" />
     <!-- 過濾條件輸入框 -->
     <div class="mb-4 flex flex-col md:flex-row gap-4 justify-center">
       <input
@@ -149,7 +150,15 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
           :key="character.id"
           :character="character"
           @click="fetchCharacterById(character.id)"
-        />
+        >
+          <template #default>
+            <button
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 mt-2 rounded"
+            >
+              View Details
+            </button>
+          </template>
+        </CharacterCard>
       </div>
 
       <!-- 分頁按鈕 -->

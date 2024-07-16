@@ -17,5 +17,6 @@ const emit = defineEmits(['click'])
     <h2 class="text-xl font-bold">{{ character.name }}</h2>
     <p class="text-gray-700">Status: {{ character.status }}</p>
     <p class="text-gray-700">Species: {{ character.species }}</p>
+    <slot></slot>
   </div>
 </template>

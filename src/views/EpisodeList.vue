@@ -1,28 +1,21 @@
 <script setup>
 import { ref } from 'vue'
-import CharacterCard from '@/components/CharacterCard.vue'
-import CharacterModal from '@/components/CharacterModal.vue'
+import RickApiCard from '@/components/RickApiCard.vue'
 import Header from '@/components/Header.vue'
 
 const characters = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
-const showModal = ref(false)
-const selectedCharacter = ref(null)
 const title = 'Rick & Morty Episode'
 
 // 新增過濾條件
 const searchName = ref('')
-const searchStatus = ref('')
 
-// 獲取角色列表的函數
-const fetchCharacters = async (page = 1) => {
-  let url = `https://rickandmortyapi.com/api/character/?page=${page}`
+// 獲取Episode列表的函數
+const fetchEpisode = async (page = 1) => {
+  let url = `https://rickandmortyapi.com/api/episode/?page=${page}`
   if (searchName.value) {
     url += `&name=${searchName.value}`
-  }
-  if (searchStatus.value) {
-    url += `&status=${searchStatus.value}`
   }
 
   const response = await fetch(url)
@@ -35,49 +28,31 @@ const fetchCharacters = async (page = 1) => {
   }
 }
 
-const fetchCharacterById = async (id) => {
-  const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`)
-  const data = await response.json()
-  selectedCharacter.value = data
-  showModal.value = true
-}
-
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++
-    fetchCharacters(currentPage.value)
+    fetchEpisode(currentPage.value)
   }
 }
 
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--
-    fetchCharacters(currentPage.value)
+    fetchEpisode(currentPage.value)
   }
 }
 
 const searchCharacters = () => {
   currentPage.value = 1
-  fetchCharacters(currentPage.value)
+  fetchEpisode(currentPage.value)
 }
 
 const clearFilters = () => {
   searchName.value = ''
-  searchStatus.value = ''
   searchCharacters()
 }
 
-// 設置狀態過濾條件
-const setStatusFilter = (status) => {
-  if (searchStatus.value === status) {
-    searchStatus.value = ''
-  } else {
-    searchStatus.value = status
-  }
-  searchCharacters()
-}
-
-fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
+fetchEpisode(currentPage.value) // 初始化時加載第一頁數據
 </script>
 
 <template>
@@ -91,38 +66,6 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
         placeholder="Name"
         class="shadow appearance-none border rounded w-full md:w-1/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
-      <div class="flex gap-2">
-        <button
-          @click="setStatusFilter('alive')"
-          :class="{
-            'bg-blue-500 text-white': searchStatus === 'alive',
-            'bg-gray-200 text-gray-700': searchStatus !== 'alive'
-          }"
-          class="py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Alive
-        </button>
-        <button
-          @click="setStatusFilter('dead')"
-          :class="{
-            'bg-blue-500 text-white': searchStatus === 'dead',
-            'bg-gray-200 text-gray-700': searchStatus !== 'dead'
-          }"
-          class="py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Dead
-        </button>
-        <button
-          @click="setStatusFilter('unknown')"
-          :class="{
-            'bg-blue-500 text-white': searchStatus === 'unknown',
-            'bg-gray-200 text-gray-700': searchStatus !== 'unknown'
-          }"
-          class="py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Unknown
-        </button>
-      </div>
     </div>
 
     <div class="mb-4 flex justify-center gap-4">
@@ -145,20 +88,13 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-128 overflow-y-auto"
       >
-        <CharacterCard
-          v-for="character in characters"
-          :key="character.id"
-          :character="character"
-          @click="fetchCharacterById(character.id)"
-        >
+        <RickApiCard v-for="character in characters" :key="character.id" :character="character">
           <template #default>
-            <button
-              class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 mt-2 rounded"
-            >
-              View Details
-            </button>
+            <h2 class="text-xl font-bold text-center">{{ character.name }}</h2>
+            <p class="text-gray-700">Air Date: {{ character.air_date }}</p>
+            <p class="text-gray-700">Episode: {{ character.episode }}</p>
           </template>
-        </CharacterCard>
+        </RickApiCard>
       </div>
 
       <!-- 分頁按鈕 -->
@@ -181,8 +117,7 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
       </div>
     </div>
     <div v-else>
-      <p class="text-center">No characters found</p>
+      <p class="text-center">No Episode found</p>
     </div>
-    <CharacterModal v-if="showModal" :character="selectedCharacter" @close="showModal = false" />
   </div>
 </template>

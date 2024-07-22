@@ -4,6 +4,6 @@ import CharacterList from '@/views/CharacterList.vue'
 
 <template>
   <div class="flex items-center justify-center flex-col bg-gray-100">
-    <CharacterList />
+    <router-view> </router-view>
   </div>
 </template>

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import RickApiCard from '@/components/RickApiCard.vue'
 import Header from '@/components/Header.vue'
 
-const characters = ref([])
+const locations = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
 const title = 'Rick & Morty Locations'
@@ -20,10 +20,10 @@ const fetchLocations = async (page = 1) => {
 
   const response = await fetch(url)
   if (!response.ok) {
-    characters.value = []
+    locations.value = []
   } else {
     const data = await response.json()
-    characters.value = data.results || []
+    locations.value = data.results || []
     totalPages.value = data.info.pages || 1
   }
 }
@@ -42,14 +42,14 @@ const prevPage = () => {
   }
 }
 
-const searchCharacters = () => {
+const searchLocations = () => {
   currentPage.value = 1
   fetchLocations(currentPage.value)
 }
 
 const clearFilters = () => {
   searchName.value = ''
-  searchCharacters()
+  searchLocations()
 }
 
 fetchLocations(currentPage.value) // 初始化時加載第一頁數據
@@ -70,7 +70,7 @@ fetchLocations(currentPage.value) // 初始化時加載第一頁數據
 
     <div class="mb-4 flex justify-center gap-4">
       <button
-        @click="searchCharacters"
+        @click="searchLocations"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Search
@@ -83,16 +83,16 @@ fetchLocations(currentPage.value) // 初始化時加載第一頁數據
       </button>
     </div>
 
-    <!-- 角色列表 -->
-    <div v-if="characters.length">
+    <!-- Location列表 -->
+    <div v-if="locations.length">
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-128 overflow-y-auto"
       >
-        <RickApiCard v-for="character in characters" :key="character.id" :character="character">
+        <RickApiCard v-for="location in locations" :key="location.id" :location="location">
           <template #default>
-            <h2 class="text-xl font-bold text-center">{{ character.name }}</h2>
-            <p class="text-gray-700">Type: {{ character.type }}</p>
-            <p class="text-gray-700">Dimension: {{ character.dimension }}</p>
+            <h2 class="text-xl font-bold text-center">{{ location.name }}</h2>
+            <p class="text-gray-700">Type: {{ location.type }}</p>
+            <p class="text-gray-700">Dimension: {{ location.dimension }}</p>
           </template>
         </RickApiCard>
       </div>

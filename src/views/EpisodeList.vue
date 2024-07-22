@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import RickApiCard from '@/components/RickApiCard.vue'
 import Header from '@/components/Header.vue'
 
-const characters = ref([])
+const episodes = ref([])
 const currentPage = ref(1)
 const totalPages = ref(0)
 const title = 'Rick & Morty Episode'
@@ -20,10 +20,10 @@ const fetchEpisode = async (page = 1) => {
 
   const response = await fetch(url)
   if (!response.ok) {
-    characters.value = []
+    episodes.value = []
   } else {
     const data = await response.json()
-    characters.value = data.results || []
+    episodes.value = data.results || []
     totalPages.value = data.info.pages || 1
   }
 }
@@ -42,14 +42,14 @@ const prevPage = () => {
   }
 }
 
-const searchCharacters = () => {
+const searchEpisodes = () => {
   currentPage.value = 1
   fetchEpisode(currentPage.value)
 }
 
 const clearFilters = () => {
   searchName.value = ''
-  searchCharacters()
+  searchEpisodes()
 }
 
 fetchEpisode(currentPage.value) // 初始化時加載第一頁數據
@@ -70,7 +70,7 @@ fetchEpisode(currentPage.value) // 初始化時加載第一頁數據
 
     <div class="mb-4 flex justify-center gap-4">
       <button
-        @click="searchCharacters"
+        @click="searchEpisodes"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Search
@@ -83,16 +83,16 @@ fetchEpisode(currentPage.value) // 初始化時加載第一頁數據
       </button>
     </div>
 
-    <!-- 角色列表 -->
-    <div v-if="characters.length">
+    <!-- Episode列表 -->
+    <div v-if="episodes.length">
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-128 overflow-y-auto"
       >
-        <RickApiCard v-for="character in characters" :key="character.id" :character="character">
+        <RickApiCard v-for="episode in episodes" :key="episode.id">
           <template #default>
-            <h2 class="text-xl font-bold text-center">{{ character.name }}</h2>
-            <p class="text-gray-700">Air Date: {{ character.air_date }}</p>
-            <p class="text-gray-700">Episode: {{ character.episode }}</p>
+            <h2 class="text-xl font-bold text-center">{{ episode.name }}</h2>
+            <p class="text-gray-700">Air Date: {{ episode.air_date }}</p>
+            <p class="text-gray-700">Episode: {{ episode.episode }}</p>
           </template>
         </RickApiCard>
       </div>

@@ -11,5 +11,14 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.isAuthenticated = false
     }
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        name: 'local',
+        paths: ['isAuthenticated']
+      }
+    ]
   }
 })

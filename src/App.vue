@@ -1,11 +1,12 @@
 <script setup>
-import { isAuthenticated } from '@/auth'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from './stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const logout = () => {
-  isAuthenticated.value = false
+  authStore.logout()
   router.push('/')
 }
 </script>
@@ -20,7 +21,7 @@ const logout = () => {
         >Home</router-link
       >
       <router-link
-        v-if="!isAuthenticated"
+        v-if="!authStore.isAuthenticated"
         to="/login"
         class="flex justify-center px-4 py-2 my-4 bg-blue-500 hover:bg-blue-700 text-white rounded-full"
         >Login</router-link

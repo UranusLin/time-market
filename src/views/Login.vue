@@ -1,12 +1,13 @@
 <script setup>
-import { isAuthenticated } from '@/auth'
 import { useRouter, useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
 const login = () => {
-  isAuthenticated.value = true
+  authStore.login()
   const redirectTo = route.query.redirect || '/'
   router.push(redirectTo)
 }

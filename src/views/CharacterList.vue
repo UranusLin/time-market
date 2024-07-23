@@ -3,13 +3,10 @@ import { ref } from 'vue'
 import CharacterCard from '@/components/CharacterCard.vue'
 import CharacterModal from '@/components/CharacterModal.vue'
 import Header from '@/components/Header.vue'
+import { useCharacterStore } from '@/stores/useCharacterStore'
 
-const characters = ref([])
-const currentPage = ref(1)
-const totalPages = ref(0)
-const showModal = ref(false)
-const selectedCharacter = ref(null)
 const title = 'Rick & Morty Characters'
+const characterStore = useCharacterStore()
 
 // 新增過濾條件
 const searchName = ref('')
@@ -25,40 +22,26 @@ const fetchCharacters = async (page = 1) => {
     url += `&status=${searchStatus.value}`
   }
 
-  const response = await fetch(url)
-  if (!response.ok) {
-    characters.value = []
-  } else {
-    const data = await response.json()
-    characters.value = data.results || []
-    totalPages.value = data.info.pages || 1
-  }
-}
-
-const fetchCharacterById = async (id) => {
-  const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`)
-  const data = await response.json()
-  selectedCharacter.value = data
-  showModal.value = true
+  characterStore.fetchCharacters(url)
 }
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-    fetchCharacters(currentPage.value)
+  if (characterStore.currentPage < characterStore.totalPages) {
+    characterStore.currentPage++
+    fetchCharacters(characterStore.currentPage)
   }
 }
 
 const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-    fetchCharacters(currentPage.value)
+  if (characterStore.currentPage > 1) {
+    characterStore.currentPage--
+    fetchCharacters(characterStore.currentPage)
   }
 }
 
 const searchCharacters = () => {
-  currentPage.value = 1
-  fetchCharacters(currentPage.value)
+  characterStore.currentPage = 1
+  fetchCharacters(characterStore.currentPage)
 }
 
 const clearFilters = () => {
@@ -77,7 +60,7 @@ const setStatusFilter = (status) => {
   searchCharacters()
 }
 
-fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
+fetchCharacters(characterStore.currentPage) // 初始化時加載第一頁數據
 </script>
 
 <template>
@@ -141,15 +124,15 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
     </div>
 
     <!-- 角色列表 -->
-    <div v-if="characters.length">
+    <div v-if="characterStore.characters.length">
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-128 overflow-y-auto"
       >
         <CharacterCard
-          v-for="character in characters"
+          v-for="character in characterStore.characters"
           :key="character.id"
           :character="character"
-          @click="fetchCharacterById(character.id)"
+          @click="characterStore.fetchCharacterById(character.id)"
         >
           <template #default>
             <button
@@ -165,15 +148,15 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
       <div class="flex justify-between mt-4">
         <button
           @click="prevPage"
-          :disabled="currentPage === 1"
+          :disabled="characterStore.currentPage === 1"
           class="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <span>Page {{ characterStore.currentPage }} of {{ characterStore.totalPages }}</span>
         <button
           @click="nextPage"
-          :disabled="currentPage === totalPages"
+          :disabled="characterStore.currentPage === characterStore.totalPages"
           class="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
@@ -183,6 +166,10 @@ fetchCharacters(currentPage.value) // 初始化時加載第一頁數據
     <div v-else>
       <p class="text-center">No characters found</p>
     </div>
-    <CharacterModal v-if="showModal" :character="selectedCharacter" @close="showModal = false" />
+    <CharacterModal
+      v-if="characterStore.showModal"
+      :character="characterStore.selectedCharacter"
+      @close="characterStore.showModal = false"
+    />
   </div>
 </template>
